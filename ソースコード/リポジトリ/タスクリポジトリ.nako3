@@ -1,0 +1,33 @@
+!厳しくチェック
+!「nadesiko3-sqlite3」を取り込む。
+
+# サンプルのため、SQLite3 をインメモリで使用し、テーブルもここで作成
+「:memory:」のSQLITE3開く。
+「CREATE TABLE IF NOT EXISTS tasks(id INTEGER PRIMARY KEY AUTOINCREMENT, 名前 TEXT, 完了 INTEGER)」を[]でSQLITE3実行。
+
+# 新しい (ID の振られていない) タスクを保存します。
+# 保存時にタスク ID が振られます。振られたタスク ID を返します。
+●(タスクを)新規保存するとは
+  「INSERT INTO tasks (名前, 完了) VALUES (?, ?)」を[タスク$名前, タスク$完了]でSQLITE3実行。
+
+  # 本来は `SQLITE3今挿入ID` 定数で振られたタスク ID を取得できるはずだが、
+  # nadesiko3-sqlite3 v3.6.6 ではシステム変数へのアクセスを古い（廃止された）やり方で行っているようなので、
+  # 現状古い方法 (`sys.__v0["..."]`) でしかタスク ID を取得できない模様
+  # See: https://nadesi.com/v3/doc/index.php?文法/JSプラグインの作り方
+  「sys.__v0["SQLITE3今挿入ID"]」をJS実行して戻す。
+ここまで。
+
+# すべてのタスクの一覧を取得します。
+●(タスクを)一覧取得するとは
+  変数 タスク一覧=[]
+
+  「SELECT id, 名前, 完了 FROM tasks」を[]でSQLITE3全取得して反復
+    タスク一覧に{
+      "id": 対象$id,
+      "名前": 対象$名前,
+      "完了": 対象$完了=1
+    }を配列プッシュ。
+  ここまで。
+
+  タスク一覧を戻す。
+ここまで。

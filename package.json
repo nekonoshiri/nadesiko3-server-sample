@@ -1,0 +1,18 @@
+{
+  "private": true,
+  "name": "nadesiko3-server-sample",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "dependencies": {
+    "nadesiko3": "^3.7.4",
+    "nadesiko3-server": "^3.6.6",
+    "nadesiko3-sqlite3": "^3.6.6"
+  },
+  "scripts": {
+    "start": "cnako3 ソースコード/メイン.nako3",
+    "lint": "echo TODO",
+    "test": "echo TODO"
+  }
+}

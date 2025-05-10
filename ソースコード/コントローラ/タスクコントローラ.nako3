@@ -1,0 +1,127 @@
+!厳しくチェック
+!『nadesiko3-server』を取り込む
+!『../モデル/タスクモデル.nako3』を取り込む
+!『../リポジトリ/タスクリポジトリ.nako3』を取り込む
+
+# Express の Request オブジェクト (req) を取得して返します。
+●リクエスト取得とは
+  # nadesiko3-server プラグインのマニュアル (https://nadesi.com/v3/doc/index.php?nadesiko3-server)
+  # には記載がないが、内部的には Express の Request オブジェクト req を sys.__setSysVar('WEBサーバ:要求', req)
+  # のように設定しているようなので、それを取り出す
+  「sys.__getSysVar("WEBサーバ:要求")」をJS実行して戻す。
+ここまで。
+
+# Express の Response オブジェクト (res) を取得して返します。
+●レスポンス取得とは
+  # nadesiko3-server プラグインのマニュアル (https://nadesi.com/v3/doc/index.php?nadesiko3-server)
+  # には記載がないが、内部的には Express の Response オブジェクト res を sys.__setSysVar('WEBサーバ:応答', res)
+  # のように設定しているようなので、それを取り出す
+  「sys.__getSysVar("WEBサーバ:応答")」をJS実行して戻す。
+ここまで。
+
+# パスパラメータを取得して返します。
+# 具体的には、Express の Request オブジェクト (req) の params プロパティを返します。
+●パスパラメータ取得とは
+  変数 リクエスト=リクエスト取得。
+  リクエスト$paramsを戻す。
+ここまで。
+
+# レスポンスの HTTP ステータスコードを設定します。
+# nadesiko3-server プラグインの `WEBサーバステータス出力` 関数と異なり、レスポンスの送信は行いません。
+# 即ち、この関数を呼び出した後に nadesiko3-server プラグインの `WEBサーバ出力` 関数を呼び出す必要があります。
+●(ステータスコードに)WEBサーバステータス設定とは
+  変数 レスポンス=レスポンス取得。
+  レスポンスの「status」をステータスコードでJSメソッド実行。
+ここまで。
+
+●タスク新規作成処理とは
+  エラー監視
+    # TODO: タスクの名前をリクエストボディから取得する
+    変数 名前=「TODO」
+
+    変数 タスク=名前でタスクモデル__新規作成。
+
+    変数 ID=タスクをタスクリポジトリ__新規保存。
+
+    {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+    {"id": ID}をJSONエンコードしてWEBサーバ出力。
+  エラーならば
+    「エラー: {エラーメッセージ}」を表示。
+    500にWEBサーバステータス設定。
+    {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+    {"message": "エラーが発生しました"}をJSONエンコードしてWEBサーバ出力。
+  ここまで。
+ここまで。
+
+●タスク取得処理とは
+  エラー監視
+    変数 パスパラメータ=パスパラメータ取得。
+    変数 タスクID=パスパラメータ.idを整数変換。
+  
+    もし、タスクIDを非数判定するならば
+      400にWEBサーバステータス設定。
+      {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+      {"message": "タスク ID が数値ではありません"}をJSONエンコードしてWEBサーバ出力。
+    違えば
+      # TODO: タスクを取得する
+
+      {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+      {"id": 1, "名前": "タスク名", "完了": いいえ}をJSONエンコードしてWEBサーバ出力。
+    ここまで。
+  エラーならば
+    「エラー: {エラーメッセージ}」を表示。
+    500にWEBサーバステータス設定。
+    {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+    {"message": "エラーが発生しました"}をJSONエンコードしてWEBサーバ出力。
+  ここまで。
+ここまで。
+
+●タスク一覧取得処理とは
+  エラー監視
+    変数 タスク一覧=[]。
+
+    タスクリポジトリ__一覧取得して反復
+      タスク一覧に{
+        "id": 対象$id,
+        "名前": 対象$名前,
+        "完了": 対象$完了
+      }を配列プッシュ。
+    ここまで。
+
+    {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+    {"tasks": タスク一覧}をJSONエンコードしてWEBサーバ出力。
+  エラーならば
+    「エラー: {エラーメッセージ}」を表示。
+    500にWEBサーバステータス設定。
+    {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+    {"message": "エラーが発生しました"}をJSONエンコードしてWEBサーバ出力。
+  ここまで。
+ここまで。
+
+●タスク完了処理とは
+  エラー監視
+    # TODO
+
+    {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+    {}をJSONエンコードしてWEBサーバ出力。
+  エラーならば
+    「エラー: {エラーメッセージ}」を表示。
+    500にWEBサーバステータス設定。
+    {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+    {"message": "エラーが発生しました"}をJSONエンコードしてWEBサーバ出力。
+  ここまで。
+ここまで。
+
+●タスク削除処理とは
+  エラー監視
+    # TODO
+  
+    {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+    {}をJSONエンコードしてWEBサーバ出力。
+  エラーならば
+    「エラー: {エラーメッセージ}」を表示。
+    500にWEBサーバステータス設定。
+    {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+    {"message": "エラーが発生しました"}をJSONエンコードしてWEBサーバ出力。
+  ここまで。
+ここまで。
