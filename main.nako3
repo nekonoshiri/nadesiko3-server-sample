@@ -1,0 +1,16 @@
+!『nadesiko3-server』を取り込む
+
+80でWEBサーバ起動。
+
+WEBサーバ起動成功時には
+  「APIサーバを起動しました」とコンソール表示。
+ここまで。
+
+WEBサーバ起動失敗時には
+  「APIサーバの起動に失敗しました」とコンソール表示。
+ここまで。
+
+「/items」にWEBサーバGET時には
+  {"Content-Type": "application/json"}をWEBサーバヘッダ出力。
+  {"items": []}をJSONエンコードしてWEBサーバ出力。
+ここまで。
